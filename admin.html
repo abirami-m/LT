@@ -1,0 +1,126 @@
+<html>
+<head>
+<title>
+LT Admin
+</title>
+<meta charset="utf-8"/>
+<script src="xlsx.full.min.js"></script>
+<script src="FileSaver.js"></script>
+</head>
+<body>
+<h1>LT Admin Page</h1>
+<p id="team"></p>
+
+<table id="tab">
+
+</table>
+
+<script>
+//var p="<tr><th>Company</th><th>Contact</th><th>Country</th></tr><tr><td>Alfreds Futterkiste</td><td>Maria Anders</td><td>Germany</td></tr>";
+
+/* set up XMLHttpRequest */
+  var url = "data1.xlsx";
+  var oReq = new XMLHttpRequest();
+  oReq.open("GET", url, true);
+  oReq.responseType = "arraybuffer";
+
+  oReq.onload = function(e) {
+  var arraybuffer = oReq.response;
+
+  /* convert data to binary string */
+  var data = new Uint8Array(arraybuffer);
+  var arr = new Array();
+  for(var i = 0; i != data.length; ++i) arr[i] = String.fromCharCode(data[i]);
+  var bstr = arr.join("");
+
+  /* Call XLSX */
+  var workbook = XLSX.read(bstr, {type:"binary"});
+
+  /* DO SOMETHING WITH workbook HERE */
+  var first_sheet_name = workbook.SheetNames[0];
+  var address_of_cell = 'A1';
+
+  /* Get worksheet */
+  var worksheet = workbook.Sheets[first_sheet_name];
+  var obj=XLSX.utils.sheet_to_json(worksheet);
+  var objt=XLSX.utils.sheet_to_json(worksheet);
+  var obj5=XLSX.utils.sheet_to_json(worksheet);
+  var obj41=XLSX.utils.sheet_to_json(worksheet);
+  var obj32=XLSX.utils.sheet_to_json(worksheet);
+  var a5=0,a41=0,a32=0;
+  //console.log(obj[obj.length-1]);
+  
+  /*Arranging accoring to team*/
+  var t=1;
+  var i=0;
+  var n=0;
+  while(i<obj.length)
+  {
+	n=0;
+	for(var j=0;j<obj.length;j++)
+	{	
+		if(obj[j].TNO==t)
+		{
+			objt[i]=obj[j];
+			i=i+1;
+			n++;
+		}
+	}
+	t=t+1;
+  }
+  
+  /*Alloting time*/
+  var year=2016,month=8,hours=10,day=23, minutes=0, seconds=0, milliseconds=0;
+  var d=new Date(year, month,day, hours, minutes, seconds, milliseconds);
+  alert(d);
+  i=0;
+  while(i<obj.length)
+  {
+	objt[i].Hash='2016-09-23';
+	d=new Date(year, month,day, hours, minutes, seconds, milliseconds);
+	objt[i].Time=""+d.getHours()+":"+d.getMinutes();
+	minutes+=5;
+	i=i+1;
+  }
+  console.log(objt[1].Hash);
+  /* For THe Table*/
+  var p="<tr><th>ID</th><th>Name</th><th>TNO</th><th>Time</th></tr>";
+  for(i=0;i<objt.length;i++)
+  {
+	p=p.concat("<tr><td>"+objt[i].ID+"</td><td>"+objt[i].Name+"</td><td>"+objt[i].TNO+"</td><td>"+objt[i].Time+"</td></tr>");
+	
+  }
+  document.getElementById("tab").innerHTML=p;
+  /*
+  while(i<obj.length)
+  {
+	n=0;
+	for(var j=0;j<obj.length;j++)
+	{	
+		if(obj[j].TNO==t)
+		{
+			n++;
+		}
+	}
+	t=t+1;
+  }*/
+  //console.log(objt);
+  
+  // bookType can be 'xlsx' or 'xlsm' or 'xlsb' 
+  var wopts = { bookType:'xlsx', bookSST:false, type:'binary' };
+  var wbout = XLSX.write(workbook,wopts);
+  function s2ab(s)
+  {
+    var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+  }
+  // the saveAs call downloads a file on the local machine
+  saveAs(new Blob([s2ab(wbout)],{type:""}), "test.xlsx");
+  }
+
+oReq.send();
+</script>
+</body>
+</html>
