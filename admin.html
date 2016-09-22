@@ -31,7 +31,7 @@ function check(form)
 {
 	reg=form.regNUM.value;
 	
-	/* set up XMLHttpRequest */
+/* set up XMLHttpRequest */
   var url = "data1.xlsx";
   var oReq = new XMLHttpRequest();
   oReq.open("GET", url, true);
@@ -58,12 +58,17 @@ function check(form)
   var obj=XLSX.utils.sheet_to_json(worksheet);
   var objt=XLSX.utils.sheet_to_json(worksheet);
   var a5=0,a41=0,a32=0;
+  var team="";
+  for(var i=0;i<obj.length;i++)
+  {
+	team=obj[i].TNO;
+	obj[i].TNO=team.slice(4);
+	objt[i].TNO=team.slice(4);
+  }
   //console.log(obj[obj.length-1]);
   
   /*Arranging accoring to team*/
-  var t=1;
-  var i=0;
-  var n=0;
+  var t=1,i=0,n=0,team="";
   while(i<obj.length)
   {
 	n=0;
