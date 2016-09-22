@@ -9,15 +9,29 @@ LT Admin
 </head>
 <body>
 <h1>LT Admin Page</h1>
+<br />
+<p id="Timings"></p>
+<p id="TeamA"></p>
+<table id="det1"></table>
+<p id="TeamB"></p>
+<table id="det2"></table>
 
-<form>
-
+<form name="info">
+<pre>
+<br />
+<br />
+Registeration Number<input type="text" placeholder="Registeration Number" name="regNUM"/><br />
+<input type="button" onclick="check(this.form)" value="Find"/>
+</form>
 
 <table id="tab"></table>
 
 <script>
-
-/* set up XMLHttpRequest */
+function check(form)
+{
+	reg=form.regNUM.value;
+	
+	/* set up XMLHttpRequest */
   var url = "data1.xlsx";
   var oReq = new XMLHttpRequest();
   oReq.open("GET", url, true);
@@ -68,7 +82,6 @@ LT Admin
   /*Alloting time*/
   var year=2016,month=8,hours=10,day=23, minutes=0, seconds=0, milliseconds=0;
   var d=new Date(year, month,day, hours, minutes, seconds, milliseconds);
-  alert(d);
   i=0;
   var oldteam1=1,oldteam2=2,c=0;
   while(i<obj.length)
@@ -87,13 +100,48 @@ LT Admin
   }
   console.log(objt[1].Hash);
   /* For THe Table*/
-  var p="<tr><th>ID</th><th>Name</th><th>TNO</th><th>Time</th></tr>";
+  var p="<tr><th>RegNUM</th><th>Name</th><th>PhoneNo</th><th>TNO</th><th>Time</th></tr>";
   for(i=0;i<objt.length;i++)
   {
-	p=p.concat("<tr><td>"+objt[i].ID+"</td><td>"+objt[i].Name+"</td><td>"+objt[i].TNO+"</td><td>"+objt[i].Time+"</td></tr>");
+	p=p.concat("<tr><td>"+objt[i].RegNUM+"</td><td>"+objt[i].Name+"</td><td>"+objt[i].PNO+"</td><td>"+objt[i].TNO+"</td><td>"+objt[i].Time+"</td></tr>");
 	
   }
   document.getElementById("tab").innerHTML=p;
+  
+  /*Searching req RegNO*/
+  var flag=0, oddteam1=1,oddstart=0,eventeam1=2;
+  for(i=0;i<objt.length&&flag==0;i++)
+  {
+	if(objt[i].TNO%2==1&&objt[i].TNO!=oddteam1)
+	{
+		oddteam1=objt[i].TNO;
+		oddstart=i;
+	}
+	if(reg==objt[i].RegNUM)
+	{
+		flag=objt[i].TNO;
+	}
+  }
+  var i=oddstart;
+  var p1="<tr><th>RegNUM</th><th>Name</th><th>PhoneNo</th></tr>";
+  while(flag!=0 && objt[i].TNO%2==1 && i<objt.length)
+  {
+	p1=p1.concat("<tr><td>"+objt[i].RegNUM+"</td><td>"+objt[i].Name+"</td><td>"+objt[i].PNO+"</td></tr>")
+	i=i+1;
+  }
+  var p2="<tr><th>RegNUM</th><th>Name</th><th>PhoneNo</th></tr>";
+  while(flag!=0 && objt[i].TNO%2!=1 && i<objt.length)
+  {
+	p2=p2.concat("<tr><td>"+objt[i].RegNUM+"</td><td>"+objt[i].Name+"</td><td>"+objt[i].PNO+"</td></tr>")
+	i=i+1;
+  }
+
+  document.getElementById("Timings").innerHTML="Time : "+objt[i-1].Time;
+  document.getElementById("TeamA").innerHTML="Team "+objt[oddstart].TNO;
+  document.getElementById("det1").innerHTML=p1;
+  document.getElementById("TeamB").innerHTML="Team "+objt[i-1].TNO;  
+  document.getElementById("det2").innerHTML=p2;
+  
   /*
   while(i<obj.length)
   {
@@ -123,8 +171,11 @@ LT Admin
   // the saveAs call downloads a file on the local machine
   saveAs(new Blob([s2ab(wbout)],{type:""}), "test.xlsx");*/
   }
-
 oReq.send();
+}
+
+
+
 </script>
 </body>
 </html>
