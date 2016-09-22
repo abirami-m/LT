@@ -9,14 +9,13 @@ LT Admin
 </head>
 <body>
 <h1>LT Admin Page</h1>
-<p id="team"></p>
 
-<table id="tab">
+<form>
 
-</table>
+
+<table id="tab"></table>
 
 <script>
-//var p="<tr><th>Company</th><th>Contact</th><th>Country</th></tr><tr><td>Alfreds Futterkiste</td><td>Maria Anders</td><td>Germany</td></tr>";
 
 /* set up XMLHttpRequest */
   var url = "data1.xlsx";
@@ -44,9 +43,6 @@ LT Admin
   var worksheet = workbook.Sheets[first_sheet_name];
   var obj=XLSX.utils.sheet_to_json(worksheet);
   var objt=XLSX.utils.sheet_to_json(worksheet);
-  var obj5=XLSX.utils.sheet_to_json(worksheet);
-  var obj41=XLSX.utils.sheet_to_json(worksheet);
-  var obj32=XLSX.utils.sheet_to_json(worksheet);
   var a5=0,a41=0,a32=0;
   //console.log(obj[obj.length-1]);
   
@@ -74,12 +70,19 @@ LT Admin
   var d=new Date(year, month,day, hours, minutes, seconds, milliseconds);
   alert(d);
   i=0;
+  var oldteam1=1,oldteam2=2,c=0;
   while(i<obj.length)
   {
 	objt[i].Hash='2016-09-23';
+	if(objt[i].TNO!=oldteam1&&objt[i].TNO!=oldteam2)
+	{
+		minutes+=5;
+		oldteam1=oldteam1+2;
+		oldteam2=oldteam2+2;
+	}
 	d=new Date(year, month,day, hours, minutes, seconds, milliseconds);
 	objt[i].Time=""+d.getHours()+":"+d.getMinutes();
-	minutes+=5;
+	
 	i=i+1;
   }
   console.log(objt[1].Hash);
@@ -106,6 +109,7 @@ LT Admin
   }*/
   //console.log(objt);
   
+  /*
   // bookType can be 'xlsx' or 'xlsm' or 'xlsb' 
   var wopts = { bookType:'xlsx', bookSST:false, type:'binary' };
   var wbout = XLSX.write(workbook,wopts);
@@ -117,7 +121,7 @@ LT Admin
     return buf;
   }
   // the saveAs call downloads a file on the local machine
-  saveAs(new Blob([s2ab(wbout)],{type:""}), "test.xlsx");
+  saveAs(new Blob([s2ab(wbout)],{type:""}), "test.xlsx");*/
   }
 
 oReq.send();
